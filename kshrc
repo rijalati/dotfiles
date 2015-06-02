@@ -6,8 +6,8 @@ typeset -x HOSTNAME=$(</etc/hostname) \
 	HOST=${HOSTNAME%%/*}
 
 typeset -x TERM=xterm-256color\
-	PS1='$(print -n "\E[0;35m$(whoami)\E[37m@\E[1;34m$HOST\E[1;35m:";\
-	print -n "\E[36m${PWD/$HOME/\~}\E[0;37m
+	PS1='$(print -n "\E[0;35m$(whoami)\E[1;33m@\E[1;34m$HOST\E[1;35m:";\
+	print -n "\E[36m${PWD/$HOME/\~}\E[1;36m
 $ ")'\
 	ttyname=$(tty) \
 	HISTFILE=$HOME/.ksh.hist \
