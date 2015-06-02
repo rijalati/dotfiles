@@ -6,8 +6,8 @@ typeset -x HOSTNAME=$(</etc/hostname) \
 	HOST=${HOSTNAME%%/*}
 
 typeset -x TERM=xterm-256color\
-	PS1='$(print -n "\E[36m$(whoami)\E[32m@\E[34m$HOST\E[37m:";\
-	print -n "\E[32m${PWD/$HOME/\~}\E[37m
+	PS1='$(print -n "\E[0;35m$(whoami)\E[37m@\E[1;34m$HOST\E[1;35m:";\
+	print -n "\E[36m${PWD/$HOME/\~}\E[0;37m
 $ ")'\
 	ttyname=$(tty) \
 	HISTFILE=$HOME/.ksh.hist \
@@ -17,6 +17,9 @@ $ ")'\
 	PATH="$PATH:/opt/ast/bin:$HOME/bin" \
 	FPATH="$FPATH:/opt/ast/fun:$HOME/fun" 
 
-typeset -fu search
-autoload search
+set -o emacs
+
+
+#typeset -fu search
+#autoload search
 
