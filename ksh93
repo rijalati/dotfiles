@@ -10,9 +10,7 @@ alias ls='ls --color=auto'
 typeset -x COSHELL=coshell \
 	NPROC=8 \
 	HOST=$(hostname)\
-	## Reset to normal: \E[0m
-	NORM="\E[0m"\
-	## Colors:
+	RESET="\E[0m"\
 	BLACK="\E[0;30m"\
 	GRAY="\E[1;30m"\
 	RED="\E[0;31m"\
@@ -29,7 +27,6 @@ typeset -x COSHELL=coshell \
 	LCYAN="\E[1;36m"\
 	LGRAY="\E[0;37m"\
 	WHITE="\E[1;37m"\
-	## Backgrounds
 	BLACKB="\E[0;40m"\
 	REDB="\E[0;41m"\
 	GREENB="\E[0;42m"\
@@ -38,37 +35,27 @@ typeset -x COSHELL=coshell \
 	PURPLEB="\E[0;45m"\
 	CYANB="\E[0;46m"\
 	GRAYB="\E[0;47m"\
-	## Attributes:
 	UNDERLINE="\E[4m"\
 	BOLD="\E[1m"\
 	INVERT="\E[7m"\
-	## Cursor movements
 	CUR_UP="\E[1A"\
 	CUR_DN="\E[1B"\
 	CUR_LEFT="\E[1D"\
 	CUR_RIGHT="\E[1C"\
-	## Start of display (top left)
 	SOD="\E[1;1f"\
 	JOBMAX=16 \
-	GO15VENDOREXPERIMENT=1 \
-  EM_CONFIG="/home/rlatimore/.emscripten" \
-  EMSCRIPTEN="/home/rlatimore/emsdk/emsdk_portable/emscripten/incoming" \
-  COMNUM=!
-#typeset -R6 COMNUM=!
-
+    COMNUM=!
 
 typeset -x COATTRIBUTES="busy=5m,cpu=8,label=cosh,percpu=4,type=amd64" \
         TERM=xterm-256color \
-	      ttyname=$(tty) \
-	      HISTFILE=$HOME/.ksh.hist \
-	      HISTSIZE=1000 \
-	      PS4='[$LINENO.$SECONDS]+' \
-	      EDITOR="emacs -nw" \
-        #	VISUAL= \
-	      PS1='$(print -n " [${WHITE}${COMNUM}${LGRAY}] ${NORM}${CYAN}${LOGNAME}${LBLUE}@${LGREEN}${HOST}${WHITE}:${NORM}";\
- printf "${LGRAY}${PWD/${HOME}/\~} ${GREEN} \n \xCE\xBB ${NORM}")' \
-		PATH="${PATH}:/opt/omni/bin:${HOME}/ast/arch/sol11.i386-64/bin:/opt/gcc-5.1.0/bin"
-
+	    ttyname=$(tty) \
+	    HISTFILE=$HOME/.ksh.hist \
+	    HISTSIZE=10000 \
+	    PS4='[$LINENO.$SECONDS]+' \
+	    EDITOR="emacs -nw" \
+		PATH="${PATH}:/opt/omni/bin:${HOME}/ast/arch/sol11.i386-64/bin:/opt/gcc-5.1.0/bin"\
+        PS1='$(print -n " [${WHITE}${COMNUM}${LGRAY}] ${NORM}${CYAN}${LOGNAME}${LBLUE}@${LGREEN}${HOST}${WHITE}:${NORM}";\
+        printf "${LGRAY}${PWD/${HOME}/\~} ${GREEN} \n \u2766 ${NORM}")'
 
 # function settings
 # typeset -fu search
