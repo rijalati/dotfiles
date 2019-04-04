@@ -1,0 +1,218 @@
+# ksh93 environment file
+# Author: Ritchie J Latimore
+# Created on: 2015/03/17 01:11
+# Updated on: 2018/01/05 17:49
+
+# set to unsigned short int and autoexport
+typeset -usi -x COLUMNS
+builtin stty
+conclean(){
+	docker rm $(docker ps -a | grep -v CON | awk '{print $1}')
+}
+
+coniclean(){
+	docker rmi $(docker images | grep -v REP | awk '{print $3}')
+}
+
+
+# update term width
+_utw()
+{
+	unset COLUMNS c
+	typeset -usi c=${ stty cols; }
+	(( COLUMNS= 12 + c ))
+	return
+}
+# the WINCH signal is sent when the terminal window size changes
+trap '_utw' WINCH
+_utw
+
+# alias settings
+alias enx='emacs -t ${ttyname}'
+alias awk='mawk'
+alias ls='ls --color=auto'
+alias bp=bindplane
+alias gic='git clone'
+alias gip='git pull'
+
+
+
+alias upnk='pacaur -Syu --ignore linux-bfq-mq --ignore linux-bfq-mq-docs --ignore linux-bfq-mq-headers'
+# variable settings
+set -a
+NORM="\E[0m"
+BLACK="\E[0;30m"
+GRAY="\E[1;30m"
+RED="\E[0;31m"
+LRED="\E[1;31m"
+GREEN="\E[0;32m"
+LGREEN="\E[1;32m"
+YELLOW="\E[0;33m"
+LYELLOW="\E[1;33m"
+BLUE="\E[0;34m"
+LBLUE="\E[1;34m"
+PURPLE="\E[0;35m"
+PINK="\E[1;35m"
+CYAN="\E[0;36m"
+LCYAN="\E[1;36m"
+LGRAY="\E[0;37m"
+WHITE="\E[1;37m"
+BLACKB="\E[0;40m"
+REDB="\E[0;41m"
+GREENB="\E[0;42m"
+YELLOWB="\E[0;43m"
+BLUEB="\E[0;44m"
+PURPLEB="\E[0;45m"
+CYANB="\E[0;46m"
+GRAYB="\E[0;47m"
+UNDERLINE="\E[4m"
+BOLD="\E[1m"
+INVERT="\E[7m"
+CUR_UP="\E[1A"
+CUR_DN="\E[1B"
+CUR_LEFT="\E[1D"
+CUR_RIGHT="\E[1C"
+CSAVE="\E[s"
+CRESTORE="\E[u"
+SOD="\E[1;1f"
+TF_LOG=TRACE
+TF_LOG_PATH="${PWD}/terraform.log"
+#CMDNUM=!
+COSHELL=/opt/ast/bin/ksh
+COATTRIBUTES="busy=5m,cpu=8,label=cosh,percpu=4,type=amd64"
+JOBMAX=16
+TIMEFORMAT=$'\nreal\t%3lR\nuser\t%3lU\nsys\t%3lS\ncpu%%\t%P'
+JAVA_HOME="$( dirname $( dirname $( readlink -f $( which javac))))"
+LD_LIBRARY_PATH="/opt/ast/lib:/usr/lib:${HOME}/lib:${LD_LIBRARY_PATH}"
+WALKMOD_HOME="${HOME}/walkmod-3.0.0"
+ALICE_HOME=${HOME}/repos/git/aliceml/distro/share/alice
+#GOROOT=${HOME}/go
+GOROOT=/usr/lib/go
+GOPATH=${HOME}/gowork
+PAGER=less
+MANPAGER=less
+FCEDIT="vim"
+set +a
+
+typeset -x TERM=xterm-256color \
+	      ttyname=$(tty) \
+	      HISTFILE=$HOME/.ksh.hist \
+	      HISTSIZE=100000 \
+	      PS4='[fn ${.sh.fun}: line ${LINENO}: ${SECONDS}s]+' \
+	      EDITOR="vim" \
+        PS1='$ '
+
+pPS1(){
+    print -f " [${WHITE}${HISTCMD}${LGRAY}] ${NORM}\
+${CYAN}${LOGNAME}${LBLUE}@${LGREEN}${HOST}${WHITE}:${NORM}\
+${LGRAY}${PWD/${HOME}/\~} \n${GREEN} \u2766 ${NORM}"
+}
+
+PS1.get()
+{
+    .sh.value=${ pPS1; }
+}
+
+#typeset -x PS1="${cmdPS1}"
+
+#clear_line="\E[2k\E[1G"
+#clear_pline="\E[1A\E[2k\E[1G"
+
+#PS1.set()
+#{
+#    printf "${clear_line}${clear_pline}"
+#    printf "${PS1}"
+#    printf "${.sh.edtext}"
+#
+#    return
+#}
+
+mode_check()
+{
+
+    mode=${.sh.edmode}
+    char=${.sh.edchar}
+
+    for (( i=0; i < ${#mode}; i++ ))
+    do
+        c=${mode:$i:1}
+        r=${mode:2:3}
+        if [[ $c == ' ' ]]
+        then
+            printf "[%s] 0x%E\n" " " \'\ \' >> .ksh.modelog
+        else
+            printf "[%s] 0x%E\n" "$c" L\'$c  >> .ksh.modelog
+        fi
+    done
+}
+
+#trap mode_check KEYBD
+
+autoload search isnt
+set -o showme
+set +o multiline
+#set -o vi
+#set -o viraw
+set -o emacs
+set -o globstar
+set -o markdirs
+set -o letoctal
+
+
+
+#eval "$(fasd --init auto)"
+#if [[ ${PATH//\//_} == *pyenv_shims* ]]; then
+#    :
+#else
+#   eval "$(pyenv init -)"
+#fi
+#if [[ ${PATH//\//_} == *pyenv-virtualenv* ]]; then
+#        :
+#else
+#    eval "$(pyenv virtualenv-init -)"
+#fi
+if [[ ${PATH} == *gowork* ]]; then
+	:
+else
+	export PATH="${PATH}:${HOME}/gowork/bin"
+fi
+
+if [[ ${PATH} == *2.3.0* ]]; then
+	:
+else
+	export PATH="${PATH}:/home/rlatimore/.gem/ruby/2.3.0/bin"
+fi
+
+if [[ ${PATH} == *:\/home\/rlatimore\/bin:* ]]; then
+	:
+else
+	export PATH="${HOME}/bin:${PATH}"
+fi
+
+if [[ ${PATH} == *google-cloud-sdk* ]]; then
+	:
+else
+	# The next line updates PATH for the Google Cloud SDK.
+	if [ -f '/home/rlatimore/google-cloud-sdk/path.ksh.inc' ]; then 
+		source '/home/rlatimore/google-cloud-sdk/path.ksh.inc' 
+	fi
+fi
+
+if [[ ${PATH} == *bindplane* ]]; then
+	:
+else
+	export PATH="${PATH}:${HOME}/src/git/bindplane-scripts/bin"
+	export BINDPLANE_HOME=~/src/git/bindplane-scripts
+fi
+if [[ ${PATH} == *walkmod* ]]; then
+	:
+else
+	export PATH="${PATH}:${WALKMOD_HOME}/bin"
+fi
+if [[ ${PATH} == "${HOME}/.local/bin" ]]; then
+	:
+else
+	export PATH="${PATH}:${HOME}/.local/bin"
+fi
+
+xinput disable bcm5974
